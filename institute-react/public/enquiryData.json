@@ -1,0 +1,30 @@
+[
+  {
+    "name":"Ekta Tiwari",
+    "address":"Noida",
+    "mobile":7065173215,
+    "course":"Javascript",
+    "description":"Cost - 6000"
+  },
+  {
+    "name":"William Smith",
+    "address":"USA",
+    "mobile":7065173215,
+    "course":"Python",
+    "description":"Cost : 6000"
+  },
+  {
+    "name":"Daniel Dave",
+    "address":"France",
+    "mobile":7065173215,
+    "course":"Java",
+    "description":"Cost : 6000"
+  },
+  {
+    "name":"Selena Gomez",
+    "address":"Germany",
+    "mobile":7065173215,
+    "course":"Photoshop",
+    "description":"Cost : 6000"
+  }
+]
