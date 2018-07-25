@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 import { Modal, Button } from 'react-bootstrap';
+import * as ReactBootstrap from 'react-bootstrap';
 import axios from 'axios';
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+
 
 import Input from "../inputBox";
 import EnquiryData from "./enquiryData";
+import { addEnquiryData } from "../../actions";
 
-export default class Enquiry extends Component {
+class Enquiry extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       show: false,
       data: [],
@@ -20,12 +24,10 @@ export default class Enquiry extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.formToJSON = this.formToJSON.bind(this);
     this.getEnquiries = this.getEnquiries.bind(this);
-
   }
 
   formToJSON(elements) {
    return [].reduce.call(elements, (data, element) => {
-
       data[element.name] = element.value;
       return data;
     }, {});
@@ -34,16 +36,14 @@ export default class Enquiry extends Component {
   handleSubmit(event) {
     event.preventDefault();
     const formData = this.formToJSON(event.target.elements);
-    console.log(event.target.elements);
-    console.log(formData);
+    this.props.addEnquiryData(formData);
 
-   axios({
+    axios({
       method: 'post',
       url: 'http://localhost:3001/client',
       data: formData
     }); 
     this.setState({ show: false });
-
   }
 
   handleClose() {
@@ -68,7 +68,7 @@ export default class Enquiry extends Component {
       })
       .catch((error) => {
         console.log(error);
-      });
+      }); 
   }
 
   componentDidMount() {
@@ -76,7 +76,7 @@ export default class Enquiry extends Component {
   }
 
   componentDidUpdate() {
-    console.log('Update')
+   // console.log('Update')
     // this.getEnquiries();
   }
 
@@ -84,8 +84,22 @@ export default class Enquiry extends Component {
     return (
       <div className="Enquiry">
         <Button bsStyle="primary" onClick={this.handleShow}>+</Button>
-
         <EnquiryData />
+        {
+         this.props.enquiry.map((x,index)=>{
+           return (
+            <ReactBootstrap.Table striped bordered condensed hover responsive>
+                <tr key = {index}>
+                  <td>{x.name}</td>
+                  <td>{x.place}</td>
+                  <td>{x.mobile}</td>
+                  <td>{x.course}</td>
+                  <td>{x.description}</td>
+                </tr>
+            </ReactBootstrap.Table>
+           )
+         })
+          }
         <Modal show={this.state.show} onHide={this.handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>Enquiry</Modal.Title>
@@ -104,8 +118,8 @@ export default class Enquiry extends Component {
                   )
                 })}
               </select>
-              <Input type="text" name="description" />
-              <Input type="submit" />
+              <Input type="text" name="description" /><br/>
+              <Button type="submit" bsStyle="success">Submit</Button>
             </form>
           </Modal.Body>
           <Modal.Footer>
@@ -116,4 +130,13 @@ export default class Enquiry extends Component {
     );
   }
 }
+const mapStateToProps = (state) => ({
+  enquiry: state.enquiries
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  addEnquiryData: bindActionCreators(addEnquiryData, dispatch)
+})
+export default connect(mapStateToProps, mapDispatchToProps)(Enquiry); 
+
 

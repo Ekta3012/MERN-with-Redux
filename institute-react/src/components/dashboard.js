@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-
-import Input from "./inputBox";
+import * as ReactBootstrap from 'react-bootstrap';
 
 class Dashboard extends Component {
   render() {
         return (
             <div className="Dashboard">
               <Link to={'/dashboard/enquiry'}>
-                  <Input type="button" value="Enquiry" bsStyle="success"/> 
+                  <ReactBootstrap.Button  bsStyle="info"> Enquiry</ReactBootstrap.Button>
               </Link>
               <Link to={'/dashboard/courses'}>
-                  <Input type="button" value="Courses" bsStyle="info"/>
+                  <ReactBootstrap.Button bsStyle="info">Courses</ReactBootstrap.Button>
               </Link>
             </div>
           );

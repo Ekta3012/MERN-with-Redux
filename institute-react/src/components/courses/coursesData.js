@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import * as ReactBootstrap from 'react-bootstrap';
 
 class CoursesData extends Component {
     constructor(){
@@ -8,7 +9,6 @@ class CoursesData extends Component {
             data: []
           }
         this.getCourses = this.getCourses.bind(this);  
-
       }
       getCourses(){
         axios.get('http://localhost:3001/showCourses')
@@ -16,7 +16,6 @@ class CoursesData extends Component {
           this.setState({
             data :response.data
           })
-          console.log(this.state.data);
         })
         .catch((error) => {
           console.log(error);
@@ -30,16 +29,24 @@ class CoursesData extends Component {
    }
   render() {
     return (
-        <div>
-          {this.state.data.map(function(item, key) {               
-              return (
-                <p key = {key}>
-                    {item.name}
-                </p>
-              )
-            
-            })} 
-         </div>
+      <ReactBootstrap.Table striped bordered condensed hover responsive>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.state.data.map(function(item, key) {              
+                  return (
+                      <tr key = {key}>
+                          <td>{item.name}</td>
+                          <td>{item.description}</td>
+                      </tr>
+                    )
+                })} 
+            </tbody>
+         </ReactBootstrap.Table>
     );
   }
 }

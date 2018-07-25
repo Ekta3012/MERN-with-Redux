@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-
+import * as ReactBootstrap from 'react-bootstrap';
 
 class EnquiryData extends Component {
     constructor(){
@@ -28,29 +28,30 @@ class EnquiryData extends Component {
      }
   render() {
     return (
-        <table>
-            <tbody>
-                <tr>
-                    <th>Name</th>
-                    <th>Address</th>
-                    <th>Mobile</th>
-                    <th>Course</th>
-                    <th>Description</th>
-                </tr>
-             {this.state.data.map(function(item, key) {              
-                 return (
-                    <tr key = {key}>
-                        <td>{item.name}</td>
-                        <td>{item.place}</td>
-                        <td>{item.mobile}</td>
-                        <td>{item.course}</td>
-                        <td>{item.description}</td>
-                    </tr>
-                  )
-               
-               })} 
-            </tbody>
-         </table>
+      <ReactBootstrap.Table striped bordered condensed hover responsive>
+        <thead>
+          <tr>
+              <th>Name</th>
+              <th>Address</th>
+              <th>Mobile</th>
+              <th>Course</th>
+              <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {this.state.data.map(function(item, key) {              
+            return (
+              <tr key = {key}>
+                  <td>{item.name}</td>
+                  <td>{item.place}</td>
+                  <td>{item.mobile}</td>
+                  <td>{item.course}</td>
+                  <td>{item.description}</td>
+              </tr>
+            )
+          })} 
+        </tbody>
+    </ReactBootstrap.Table>
     );
   }
 }
