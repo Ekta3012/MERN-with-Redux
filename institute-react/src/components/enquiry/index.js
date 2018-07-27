@@ -5,7 +5,6 @@ import axios from 'axios';
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
-
 import Input from "../inputBox";
 import EnquiryData from "./enquiryData";
 import { addEnquiryData } from "../../actions";
@@ -23,7 +22,7 @@ class Enquiry extends Component {
     this.handleClose = this.handleClose.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.formToJSON = this.formToJSON.bind(this);
-    this.getEnquiries = this.getEnquiries.bind(this);
+    this.showCourses = this.showCourses.bind(this);
   }
 
   formToJSON(elements) {
@@ -54,7 +53,10 @@ class Enquiry extends Component {
     this.setState({ show: true });
   }
 
-  getEnquiries(){
+  componentWillReceiveProps(newProps){
+    console.log("new props",newProps)
+  }
+  showCourses(){
     axios({
       url: 'http://localhost:3001/showCourses',
       method: 'GET'
@@ -64,7 +66,6 @@ class Enquiry extends Component {
         this.setState({
           data: response.data
         })
-        console.log(this.state.data);
       })
       .catch((error) => {
         console.log(error);
@@ -72,14 +73,10 @@ class Enquiry extends Component {
   }
 
   componentDidMount() {
-    this.getEnquiries();
+    this.showCourses();
   }
 
-  componentDidUpdate() {
-   // console.log('Update')
-    // this.getEnquiries();
-  }
-
+  
   render() {
     return (
       <div className="Enquiry">

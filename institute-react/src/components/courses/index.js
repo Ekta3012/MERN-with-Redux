@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import axios from 'axios';
+//import axios from 'axios';
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import * as ReactBootstrap from 'react-bootstrap';
 
 import Input from "../inputBox";
 import CoursesData from './coursesData';
 import { addCourseData } from "../../actions"
+import { postCourseAPI,getCourses } from "../../api";
 
 class Courses extends Component {
   constructor(props){
@@ -18,13 +20,22 @@ class Courses extends Component {
     this.handleClose = this.handleClose.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.formToJSON = this.formToJSON.bind(this);  
+
+  }
+
+  componentDidMount(){
+    getCourses().then(res => {
+      console.log("result",res);
+      this.props.dispatcher({
+        type:'FETCH_COURSES',
+        payload:res
+      });
+    })
   }
 
   formToJSON(elements) {
     return [].reduce.call(elements, (data, element) => {
- 
        data[element.name] = element.value;
- 
        return data;
      }, {});
    }
@@ -32,18 +43,23 @@ class Courses extends Component {
    handleSubmit(event) {
      event.preventDefault();
      const formData = this.formToJSON(event.target.elements);
-     this.props.addCourseData(formData);
-     console.log(formData);
- 
-    axios({
-       method: 'post',
-       url: 'http://localhost:3001/course',
-       data: formData
-     }); 
-     this.setState({ show: false });
-    }
+     //this.props.addCourseData(formData);
+     console.log(this.props.dispatcher)
+    
 
-   handleClose() {
+    postCourseAPI(formData)
+     .then(res =>{
+        this.props.dispatcher({
+          type:'COURSE_SUCCESS',
+          payload:{
+            name:res.data.name,
+            description:res.data.description
+          }
+        })
+     })
+  }
+
+  handleClose() {
     this.setState({ show: false });
   }
 
@@ -55,14 +71,27 @@ class Courses extends Component {
     return (
       <div className="Courses">
       <Button bsStyle="primary" onClick={this.handleShow}>+</Button>
-      <CoursesData/>
-      {
-         this.props.course.map((x,index)=>{
-           return (
-            x.name,x.description
-           )
-         })
-          }
+        <ReactBootstrap.Table striped bordered condensed hover responsive>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+                  {
+                    this.props.course.map(function(item, key) {
+                      return (
+                          <tr key = {key}>
+                              <td>{item.name}</td>
+                              <td>{item.description}</td>
+                          </tr>
+                        )
+                    })
+                  }
+            </tbody>
+        </ReactBootstrap.Table>
+
         <Modal show={this.state.show} onHide={this.handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>Add Course</Modal.Title>
@@ -85,9 +114,12 @@ class Courses extends Component {
 
 const mapStateToProps = (state) => ({
   course: state.courses
-})
+});
 
 const mapDispatchToProps = (dispatch) => ({
-  addCourseData: bindActionCreators(addCourseData, dispatch)
-})
+  //postCourseInDb: bindActionCreators(postCourseInDb, dispatch),
+  addCourseData: bindActionCreators(addCourseData, dispatch),
+  dispatcher:dispatch
+});
+
 export default connect(mapStateToProps, mapDispatchToProps)(Courses); 
