@@ -1,11 +1,17 @@
-import {createStore, applyMiddleware} from 'redux';  
-import { addDataToView } from "./reducers";
+import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
+import addDataToView from './reducers';
 
-export default function configureStore() {  
-  return createStore(
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+export default function configureStore(initialState) {
+  const store = createStore(
     addDataToView,
-    applyMiddleware(thunk),
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    initialState,
+    composeEnhancers(
+      applyMiddleware(thunk),
+    ),
   );
+
+  return store;
 }

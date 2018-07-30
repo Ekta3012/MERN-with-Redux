@@ -7,8 +7,9 @@ import * as ReactBootstrap from 'react-bootstrap';
 
 import Input from "../inputBox";
 import CoursesData from './coursesData';
-import { addCourseData } from "../../actions"
+import { addCourseData,getCourseDataFromDb,postCourseDataInDb } from "../../actions";
 import { postCourseAPI,getCourses } from "../../api";
+
 
 class Courses extends Component {
   constructor(props){
@@ -24,13 +25,7 @@ class Courses extends Component {
   }
 
   componentDidMount(){
-    getCourses().then(res => {
-      console.log("result",res);
-      this.props.dispatcher({
-        type:'FETCH_COURSES',
-        payload:res
-      });
-    })
+    this.props.getCourseDataFromDb();
   }
 
   formToJSON(elements) {
@@ -43,20 +38,20 @@ class Courses extends Component {
    handleSubmit(event) {
      event.preventDefault();
      const formData = this.formToJSON(event.target.elements);
-     //this.props.addCourseData(formData);
-     console.log(this.props.dispatcher)
+     this.props.postCourseDataInDb(formData);
+     //console.log(this.props.dispatcher)
     
 
-    postCourseAPI(formData)
-     .then(res =>{
+    /* postCourseAPI(formData)
+    .then(res =>{
         this.props.dispatcher({
           type:'COURSE_SUCCESS',
-          payload:{
+          payload: {
             name:res.data.name,
             description:res.data.description
           }
         })
-     })
+    }) */
   }
 
   handleClose() {
@@ -117,9 +112,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  //postCourseInDb: bindActionCreators(postCourseInDb, dispatch),
+  getCourseDataFromDb : bindActionCreators(getCourseDataFromDb, dispatch),
+  postCourseDataInDb: bindActionCreators(postCourseDataInDb, dispatch),
   addCourseData: bindActionCreators(addCourseData, dispatch),
-  dispatcher:dispatch
+  dispatcher: dispatch
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Courses); 

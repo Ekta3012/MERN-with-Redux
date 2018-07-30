@@ -5,7 +5,7 @@ const initialState= {
                         courses:[]
                     }
 
-export function addDataToView(state=initialState,action){
+export default function addDataToView(state=initialState,action){
         switch (action.type){
             case ENQUIRY:
                 const obj=action.payload

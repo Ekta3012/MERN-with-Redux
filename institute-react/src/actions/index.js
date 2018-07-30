@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import { postCourseAPI,getCourses } from "../api";
 
 export const ENQUIRY ="ENQUIRY";
 export const COURSE_REQUEST="COURSE_REQUEST";
@@ -32,18 +32,33 @@ export const addCourseData = (result) => {
 */
 
 export const getCourseDataFromDb = (result)=>{
-    //debugger;
-    console.log("resultCourse",result)
     return (dispatch) => {
         axios({
-            method: 'post',
-            url: 'http://localhost:3001/course',
+            method: 'get',
+            url: 'http://localhost:3001/showcourses',
             data: result
         })
         .then(res=> {
-            dispatch({type:'FETCH_COURSES',
-            payload:res})
+            dispatch({
+                type:'FETCH_COURSES',
+                payload:res.data
+            });
         });
+    }
+}
+
+export const postCourseDataInDb =   (data)  =>  {
+    return (dispatch)   =>  {
+        postCourseAPI(data)
+        .then(res =>{
+            dispatch({
+            type:'COURSE_SUCCESS',
+            payload: {
+                name:res.data.name,
+                description:res.data.description
+            }
+            })
+        })  
     }
 }
 

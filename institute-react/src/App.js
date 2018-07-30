@@ -5,7 +5,6 @@ import { Provider } from "react-redux";
 
 import configureStore from "./middleware";
 
-
 const store=configureStore();
 
 class App extends Component {
